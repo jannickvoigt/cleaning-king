@@ -743,7 +743,7 @@
   const STORAGE_KEY = 'cleaning-king-state';
 
   // ═══════════════════════════════════════════════
-  // STORAGE (persistent, shared across all viewers)
+  // STORAGE (persistent using localStorage)
   // ═══════════════════════════════════════════════
   async function saveState() {
     try {
@@ -752,7 +752,7 @@
         log: state.log,
         pinHash: state.pinHash
       };
-      await window.storage.set(STORAGE_KEY, JSON.stringify(toSave), true);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
     } catch (e) {
       console.error('Save failed:', e);
       showToast('⚠️ Save failed', 'error');
@@ -761,9 +761,9 @@
 
   async function loadState() {
     try {
-      const result = await window.storage.get(STORAGE_KEY, true);
-      if (result && result.value) {
-        const loaded = JSON.parse(result.value);
+      const data = localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        const loaded = JSON.parse(data);
         state.players = loaded.players || [];
         state.log = loaded.log || [];
         state.pinHash = loaded.pinHash || null;
