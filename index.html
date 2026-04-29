@@ -743,16 +743,42 @@
   const STORAGE_KEY = 'cleaning-king-state';
 
   // ═══════════════════════════════════════════════
-  // STORAGE (persistent using localStorage)
+  // STORAGE (IndexedDB - reliable on GitHub Pages)
   // ═══════════════════════════════════════════════
+  let db = null;
+
+  async function initDB() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open('CleaningKingDB', 1);
+      req.onerror = () => reject(req.error);
+      req.onsuccess = () => {
+        db = req.result;
+        resolve(db);
+      };
+      req.onupgradeneeded = (e) => {
+        const database = e.target.result;
+        if (!database.objectStoreNames.contains('gameState')) {
+          database.createObjectStore('gameState', { keyPath: 'id' });
+        }
+      };
+    });
+  }
+
   async function saveState() {
     try {
+      if (!db) await initDB();
       const toSave = {
+        id: 'state',
         players: state.players,
         log: state.log,
         pinHash: state.pinHash
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('gameState', 'readwrite');
+        const req = tx.objectStore('gameState').put(toSave);
+        req.onerror = () => reject(req.error);
+        tx.oncomplete = () => resolve();
+      });
     } catch (e) {
       console.error('Save failed:', e);
       showToast('⚠️ Save failed', 'error');
@@ -761,15 +787,23 @@
 
   async function loadState() {
     try {
-      const data = localStorage.getItem(STORAGE_KEY);
-      if (data) {
-        const loaded = JSON.parse(data);
-        state.players = loaded.players || [];
-        state.log = loaded.log || [];
-        state.pinHash = loaded.pinHash || null;
-      }
+      if (!db) await initDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('gameState', 'readonly');
+        const req = tx.objectStore('gameState').get('state');
+        req.onerror = () => reject(req.error);
+        req.onsuccess = () => {
+          const data = req.result;
+          if (data) {
+            state.players = data.players || [];
+            state.log = data.log || [];
+            state.pinHash = data.pinHash || null;
+          }
+          resolve();
+        };
+      });
     } catch (e) {
-      console.log('No existing data, starting fresh');
+      console.log('No existing data, starting fresh:', e);
     }
   }
 
