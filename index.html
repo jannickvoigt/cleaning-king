@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>👑 Cleaning King — Mama Health</title>
+<style>
+  :root {
+    --bg-deep: #0a0e17;
+    --bg-mid: #131826;
+    --bg-card: #1a2030;
+    --bg-elevated: #232b3d;
+    --border: #2d3548;
+    --border-glow: #3d4866;
+    --gold: #ffd60a;
+    --gold-glow: #ffd60a55;
+    --silver: #c0c5d1;
+    --bronze: #cd7f32;
+    --accent: #00f0ff;
+    --accent-glow: #00f0ff44;
+    --danger: #ff3860;
+    --success: #00e676;
+    --text: #e6ebf5;
+    --text-dim: #8892a8;
+    --text-faded: #5a6378;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg-deep);
+    background-image:
+      radial-gradient(circle at 20% 0%, #1a2545 0%, transparent 40%),
+      radial-gradient(circle at 80% 100%, #2a1545 0%, transparent 40%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  .scanline {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    background: linear-gradient(transparent 50%, rgba(0,240,255,0.015) 50%);
+    background-size: 100% 4px;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  header {
+    text-align: center;
+    padding: 30px 0 40px;
+    position: relative;
+  }
+
+  .crown {
+    font-size: 64px;
+    filter: drop-shadow(0 0 20px var(--gold-glow));
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    margin-top: 10px;
+    background: linear-gradient(90deg, var(--gold), #ff8c00, var(--gold));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+    text-transform: uppercase;
+  }
+
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
+
+  .subtitle {
+    color: var(--accent);
+    font-size: 12px;
+    letter-spacing: 6px;
+    margin-top: 8px;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  .month-badge {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 4px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* Rules Panel */
+  .rules-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rules-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .rules-title {
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .rules-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .rule {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: border-color 0.2s;
+  }
+
+  .rule:hover { border-color: var(--border-glow); }
+
+  .rule-text { color: var(--text); }
+  .rule-text small { color: var(--text-dim); display: block; margin-top: 4px; font-size: 12px; }
+
+  .rule-points {
+    background: linear-gradient(135deg, var(--accent), #6633ff);
+    color: #000;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  .rule-points.special {
+    background: linear-gradient(135deg, var(--gold), #ff8c00);
+    box-shadow: 0 0 12px var(--gold-glow);
+  }
+
+  .rule-points.mystery {
+    background: linear-gradient(135deg, #9d4edd, #ff8c00);
+    box-shadow: 0 0 12px rgba(157, 78, 221, 0.5);
+    color: #fff;
+  }
+
+  .rule-points.warning {
+    background: linear-gradient(135deg, var(--danger), #8b0000);
+    box-shadow: 0 0 12px rgba(255, 56, 96, 0.5);
+    color: #fff;
+  }
+
+  .rule.warning-rule {
+    border-color: var(--danger);
+    background: linear-gradient(90deg, rgba(255,56,96,0.08), var(--bg-deep));
+  }
+
+  .rule.warning-rule:hover { border-color: var(--danger); box-shadow: 0 0 12px rgba(255,56,96,0.2); }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 12px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .stats {
+    display: flex;
+    gap: 24px;
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+
+  .stats strong {
+    color: var(--accent);
+    font-size: 16px;
+    margin-right: 6px;
+  }
+
+  .btn {
+    background: var(--bg-elevated);
+    color: var(--text);
+    border: 1px solid var(--border-glow);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .btn:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    transform: translateY(-1px);
+  }
+
+  .btn-admin {
+    background: linear-gradient(135deg, var(--gold), #ff8c00);
+    color: #000;
+    border: none;
+    font-weight: 700;
+  }
+
+  .btn-admin:hover { box-shadow: 0 0 16px var(--gold-glow); }
+
+  .btn-danger {
+    background: var(--bg-elevated);
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .btn-danger:hover { background: var(--danger); color: #fff; box-shadow: 0 0 12px var(--danger); }
+
+  .leaderboard {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  }
+
+  .player-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 120px auto;
+    align-items: center;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .player-row:last-child { border-bottom: none; }
+  .player-row:hover { background: var(--bg-elevated); }
+
+  .rank {
+    font-size: 24px;
+    font-weight: 900;
+    text-align: center;
+    color: var(--text-faded);
+    font-family: 'Courier New', monospace;
+  }
+
+  .player-row.rank-1 .rank { color: var(--gold); text-shadow: 0 0 12px var(--gold-glow); font-size: 28px; }
+  .player-row.rank-2 .rank { color: var(--silver); }
+  .player-row.rank-3 .rank { color: var(--bronze); }
+
+  .player-row.rank-1 {
+    background: linear-gradient(90deg, transparent, rgba(255,214,10,0.08), transparent);
+  }
+
+  .player-info { display: flex; align-items: center; gap: 14px; }
+
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #6633ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 18px;
+    color: #000;
+    border: 2px solid var(--border-glow);
+  }
+
+  .player-row.rank-1 .avatar { border-color: var(--gold); box-shadow: 0 0 12px var(--gold-glow); }
+  .player-row.rank-2 .avatar { border-color: var(--silver); }
+  .player-row.rank-3 .avatar { border-color: var(--bronze); }
+
+  .player-name {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .crown-badge {
+    margin-left: 8px;
+    font-size: 18px;
+    filter: drop-shadow(0 0 6px var(--gold-glow));
+  }
+
+  .points {
+    text-align: right;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  .points-label {
+    font-size: 10px;
+    color: var(--text-faded);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .admin-controls {
+    display: flex;
+    gap: 6px;
+    margin-left: 16px;
+  }
+
+  .point-btn {
+    min-width: 36px; height: 32px;
+    padding: 0 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border-glow);
+    background: var(--bg-elevated);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .point-btn.add { color: var(--success); border-color: var(--success); }
+  .point-btn.add:hover { background: var(--success); color: #000; }
+  .point-btn.add3 { color: var(--gold); border-color: var(--gold); }
+  .point-btn.add3:hover { background: var(--gold); color: #000; }
+  .point-btn.custom { color: #9d4edd; border-color: #9d4edd; }
+  .point-btn.custom:hover { background: #9d4edd; color: #fff; }
+  .point-btn.sub { color: var(--danger); border-color: var(--danger); }
+  .point-btn.sub:hover { background: var(--danger); color: #fff; }
+  .point-btn.del { color: var(--text-dim); }
+  .point-btn.del:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
+
+  .empty-state {
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-dim);
+  }
+
+  .empty-state .big-emoji { font-size: 48px; margin-bottom: 16px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: 0 0 40px var(--accent-glow);
+  }
+
+  .modal h2 {
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .modal p { color: var(--text-dim); font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+
+  .input {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 16px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-family: inherit;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .input.pin { text-align: center; letter-spacing: 12px; font-size: 22px; font-family: 'Courier New', monospace; }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .error-msg {
+    color: var(--danger);
+    font-size: 13px;
+    margin-bottom: 12px;
+    min-height: 18px;
+  }
+
+  /* Activity Log */
+  .log-section {
+    margin-top: 30px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .log-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .log-header h3 {
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .log-toggle { color: var(--accent); font-size: 12px; }
+
+  .log-list {
+    max-height: 360px;
+    overflow-y: auto;
+    display: none;
+  }
+
+  .log-list.expanded { display: block; }
+
+  .log-entry {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    color: var(--text-dim);
+  }
+
+  .log-entry:last-child { border-bottom: none; }
+
+  .log-action.positive { color: var(--success); font-weight: 600; }
+  .log-action.negative { color: var(--danger); font-weight: 600; }
+  .log-action.system { color: var(--gold); font-weight: 600; }
+
+  .log-time {
+    font-size: 11px;
+    color: var(--text-faded);
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+  }
+
+  .reset-section {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--text-faded);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+  }
+
+  .reset-section a {
+    color: var(--text-dim);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--text-faded);
+    cursor: pointer;
+    margin-left: 8px;
+  }
+
+  .reset-section a:hover { color: var(--danger); border-color: var(--danger); }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-elevated);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 200;
+    transition: transform 0.3s ease;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error { border-color: var(--danger); box-shadow: 0 0 20px var(--danger); }
+  .toast.success { border-color: var(--success); box-shadow: 0 0 20px rgba(0,230,118,0.4); }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 28px; letter-spacing: 2px; }
+    .player-row { grid-template-columns: 40px 1fr auto; padding: 14px 12px; gap: 8px; }
+    .admin-controls { grid-column: 1/-1; justify-content: center; margin: 8px 0 0; flex-wrap: wrap; }
+    .points { font-size: 18px; }
+    .toolbar { flex-direction: column; gap: 12px; align-items: stretch; }
+    .stats { justify-content: space-around; }
+    .rule { grid-template-columns: 1fr; gap: 10px; }
+    .rule-points { justify-self: start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<div class="container">
+  <header>
+    <div class="crown">👑</div>
+    <h1>Cleaning King</h1>
+    <div class="subtitle">// Mama Health Office Ranking</div>
+    <div class="month-badge" id="monthBadge"></div>
+  </header>
+
+  <!-- Rules Panel -->
+  <div class="rules-panel">
+    <div class="rules-title">📜 The Rules</div>
+    <ul class="rules-list">
+      <li class="rule warning-rule">
+        <div class="rule-text">
+          ⚠️ Tech people who break the PIN
+          <small>Don't even think about it. Hands off the admin panel.</small>
+        </div>
+        <div class="rule-points warning">−100 PTS</div>
+      </li>
+      <li class="rule">
+        <div class="rule-text">
+          🍽️ Refilled + turned on the dishwasher
+        </div>
+        <div class="rule-points">+1 PT</div>
+      </li>
+      <li class="rule">
+        <div class="rule-text">
+          ✨ Emptied the dishwasher
+        </div>
+        <div class="rule-points">+1 PT</div>
+      </li>
+      <li class="rule">
+        <div class="rule-text">
+          🧽 Cleaning, bottles, trash
+          <small>Before &amp; after photo required — send them to Jannick on Slack</small>
+        </div>
+        <div class="rule-points special">+3 PTS</div>
+      </li>
+      <li class="rule">
+        <div class="rule-text">
+          🎁 Surprise office cleaning activity
+          <small>Anything that helps the whole office — Jannick decides the points</small>
+        </div>
+        <div class="rule-points mystery">? PTS</div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="toolbar">
+    <div class="stats">
+      <div><strong id="playerCount">0</strong>PLAYERS</div>
+      <div><strong id="totalPoints">0</strong>TOTAL POINTS</div>
+    </div>
+    <button class="btn btn-admin" id="adminBtn">🔐 Admin</button>
+  </div>
+
+  <div class="leaderboard" id="leaderboard">
+    <div class="empty-state">
+      <div class="big-emoji">🍽️</div>
+      <div>No players yet. Log in as admin to add players.</div>
+    </div>
+  </div>
+
+  <div class="log-section">
+    <div class="log-header" id="logHeader">
+      <h3>📜 Activity Log</h3>
+      <span class="log-toggle" id="logToggle">▼ Show</span>
+    </div>
+    <div class="log-list" id="logList"></div>
+  </div>
+
+  <div class="reset-section" id="resetSection" style="display:none;">
+    Monthly reset available
+    <a id="resetLink">Reset all points →</a>
+  </div>
+</div>
+
+<!-- PIN Modal -->
+<div class="modal-overlay" id="pinModal">
+  <div class="modal">
+    <h2>🔐 Admin Login</h2>
+    <p>Enter the admin PIN to award points and manage players.</p>
+    <div class="error-msg" id="pinError"></div>
+    <input type="password" class="input pin" id="pinInput" maxlength="6" inputmode="numeric" placeholder="••••">
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('pinModal')">Cancel</button>
+      <button class="btn btn-admin" id="pinSubmit">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Set PIN Modal (first time) -->
+<div class="modal-overlay" id="setPinModal">
+  <div class="modal">
+    <h2>🔐 Admin PIN Setup</h2>
+    <p>Create a 4-6 digit PIN. You'll need it to award points in the future. <strong style="color:var(--gold)">Don't forget it!</strong></p>
+    <div class="error-msg" id="setPinError"></div>
+    <input type="password" class="input pin" id="setPinInput" maxlength="6" inputmode="numeric" placeholder="••••">
+    <input type="password" class="input pin" id="setPinConfirm" maxlength="6" inputmode="numeric" placeholder="Confirm PIN">
+    <div class="modal-actions">
+      <button class="btn btn-admin" id="setPinSubmit">Set PIN</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Player Modal -->
+<div class="modal-overlay" id="playerModal">
+  <div class="modal">
+    <h2>➕ Add Player</h2>
+    <p>Add a new office player to the ranking.</p>
+    <input type="text" class="input" id="playerNameInput" placeholder="Player name" maxlength="30">
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('playerModal')">Cancel</button>
+      <button class="btn btn-admin" id="playerSubmit">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Points Modal -->
+<div class="modal-overlay" id="customPointsModal">
+  <div class="modal">
+    <h2>🎁 Surprise Points</h2>
+    <p>For surprise office cleaning activities. Enter a custom point value (positive or negative).</p>
+    <input type="number" class="input" id="customPointsInput" placeholder="e.g. 5" step="1">
+    <input type="text" class="input" id="customReasonInput" placeholder="What did they do? (optional)" maxlength="80">
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('customPointsModal')">Cancel</button>
+      <button class="btn btn-admin" id="customPointsSubmit">Award</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Panel Modal -->
+<div class="modal-overlay" id="adminPanel">
+  <div class="modal">
+    <h2>⚙️ Admin Panel</h2>
+    <p>You're logged in as admin. Point and delete buttons are now visible on each player.</p>
+    <div class="modal-actions">
+      <button class="btn" id="addPlayerBtn">➕ Add Player</button>
+      <button class="btn btn-danger" id="resetMonthBtn">🗓️ Reset Month</button>
+      <button class="btn" id="logoutBtn">🚪 Logout</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <h2 id="confirmTitle">Confirm</h2>
+    <p id="confirmMsg"></p>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('confirmModal')">Cancel</button>
+      <button class="btn btn-danger" id="confirmSubmit">Yes, do it</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ═══════════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════════
+  let state = {
+    players: [],
+    log: [],
+    pinHash: null,
+    isAdmin: false
+  };
+
+  const STORAGE_KEY = 'cleaning-king-state';
+
+  // ═══════════════════════════════════════════════
+  // STORAGE (persistent, shared across all viewers)
+  // ═══════════════════════════════════════════════
+  async function saveState() {
+    try {
+      const toSave = {
+        players: state.players,
+        log: state.log,
+        pinHash: state.pinHash
+      };
+      await window.storage.set(STORAGE_KEY, JSON.stringify(toSave), true);
+    } catch (e) {
+      console.error('Save failed:', e);
+      showToast('⚠️ Save failed', 'error');
+    }
+  }
+
+  async function loadState() {
+    try {
+      const result = await window.storage.get(STORAGE_KEY, true);
+      if (result && result.value) {
+        const loaded = JSON.parse(result.value);
+        state.players = loaded.players || [];
+        state.log = loaded.log || [];
+        state.pinHash = loaded.pinHash || null;
+      }
+    } catch (e) {
+      console.log('No existing data, starting fresh');
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // PIN HASHING
+  // ═══════════════════════════════════════════════
+  async function hashPin(pin) {
+    const enc = new TextEncoder().encode(pin + 'cleaning-king-salt-2026');
+    const buf = await crypto.subtle.digest('SHA-256', enc);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // ═══════════════════════════════════════════════
+  // RENDER
+  // ═══════════════════════════════════════════════
+  function render() {
+    const board = document.getElementById('leaderboard');
+    const sorted = [...state.players].sort((a, b) => b.points - a.points);
+
+    if (sorted.length === 0) {
+      board.innerHTML = `
+        <div class="empty-state">
+          <div class="big-emoji">🍽️</div>
+          <div>No players yet. ${state.isAdmin ? 'Click "Add Player" in the admin panel.' : 'Log in as admin to add players.'}</div>
+        </div>`;
+    } else {
+      board.innerHTML = sorted.map((p, i) => {
+        const rank = i + 1;
+        const initials = p.name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+        const crown = rank === 1 && p.points > 0 ? '<span class="crown-badge">👑</span>' : '';
+        return `
+          <div class="player-row rank-${rank}">
+            <div class="rank">${rank === 1 ? '①' : rank === 2 ? '②' : rank === 3 ? '③' : '#' + rank}</div>
+            <div class="player-info">
+              <div class="avatar">${initials}</div>
+              <div class="player-name">${escapeHtml(p.name)}${crown}</div>
+            </div>
+            <div>
+              <span class="points-label">Points</span>
+              <div class="points">${p.points}</div>
+            </div>
+            ${state.isAdmin ? `
+              <div class="admin-controls">
+                <button class="point-btn add" onclick="changePoints('${p.id}', 1)" title="+1 (dishwasher)">+1</button>
+                <button class="point-btn add3" onclick="changePoints('${p.id}', 3)" title="+3 (cleaning + photos)">+3</button>
+                <button class="point-btn custom" onclick="openCustomPoints('${p.id}')" title="Surprise points">?</button>
+                <button class="point-btn sub" onclick="changePoints('${p.id}', -1)" title="-1">−</button>
+                <button class="point-btn del" onclick="confirmDeletePlayer('${p.id}')" title="Remove">✕</button>
+              </div>
+            ` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    document.getElementById('playerCount').textContent = state.players.length;
+    document.getElementById('totalPoints').textContent = state.players.reduce((s, p) => s + p.points, 0);
+
+    const now = new Date();
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('monthBadge').textContent = `Season: ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+    document.getElementById('resetSection').style.display = state.isAdmin ? 'block' : 'none';
+    document.getElementById('adminBtn').textContent = state.isAdmin ? '⚙️ Admin Panel' : '🔐 Admin';
+
+    renderLog();
+  }
+
+  function renderLog() {
+    const list = document.getElementById('logList');
+    if (state.log.length === 0) {
+      list.innerHTML = '<div class="log-entry"><span>No activity yet.</span></div>';
+      return;
+    }
+    list.innerHTML = state.log.slice().reverse().map(entry => {
+      const date = new Date(entry.ts);
+      const timeStr = date.toLocaleString('en-GB', {
+        day: '2-digit', month: '2-digit', year: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+      });
+      return `
+        <div class="log-entry">
+          <span class="log-action ${entry.type}">${escapeHtml(entry.msg)}</span>
+          <span class="log-time">${timeStr}</span>
+        </div>`;
+    }).join('');
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ═══════════════════════════════════════════════
+  // ACTIONS
+  // ═══════════════════════════════════════════════
+  function logEntry(type, msg) {
+    state.log.push({ ts: Date.now(), type, msg });
+    if (state.log.length > 200) state.log = state.log.slice(-200);
+  }
+
+  async function changePoints(id, delta, reason = '') {
+    if (!state.isAdmin) return;
+    const player = state.players.find(p => p.id === id);
+    if (!player) return;
+    player.points += delta;
+    const reasonStr = reason ? ` — ${reason}` : '';
+    logEntry(delta > 0 ? 'positive' : 'negative',
+      `${player.name} ${delta > 0 ? '+' : ''}${delta} pt${Math.abs(delta) === 1 ? '' : 's'}${reasonStr} (now: ${player.points})`);
+    await saveState();
+    render();
+    showToast(`${delta > 0 ? '+' : ''}${delta} for ${player.name}`, 'success');
+  }
+
+  let customTargetId = null;
+  function openCustomPoints(id) {
+    customTargetId = id;
+    document.getElementById('customPointsInput').value = '';
+    document.getElementById('customReasonInput').value = '';
+    openModal('customPointsModal');
+    setTimeout(() => document.getElementById('customPointsInput').focus(), 100);
+  }
+
+  function confirmDeletePlayer(id) {
+    const player = state.players.find(p => p.id === id);
+    if (!player) return;
+    showConfirm(
+      `Remove player?`,
+      `Do you really want to remove "${player.name}" from the ranking? This cannot be undone.`,
+      async () => {
+        state.players = state.players.filter(p => p.id !== id);
+        logEntry('system', `🗑️ ${player.name} was removed`);
+        await saveState();
+        render();
+        showToast(`${player.name} removed`, 'success');
+      }
+    );
+  }
+
+  async function addPlayer(name) {
+    const trimmed = name.trim();
+    if (!trimmed) return false;
+    if (state.players.some(p => p.name.toLowerCase() === trimmed.toLowerCase())) {
+      showToast('Player name already exists', 'error');
+      return false;
+    }
+    state.players.push({
+      id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+      name: trimmed,
+      points: 0
+    });
+    logEntry('system', `➕ ${trimmed} joined the game`);
+    await saveState();
+    render();
+    showToast(`${trimmed} added`, 'success');
+    return true;
+  }
+
+  function confirmResetMonth() {
+    showConfirm(
+      `🗓️ Reset the month?`,
+      `All points will be reset to 0. Players will be kept. This cannot be undone. Are you sure?`,
+      async () => {
+        const winner = [...state.players].sort((a,b) => b.points - a.points)[0];
+        const winnerMsg = winner && winner.points > 0 ? ` 👑 Winner: ${winner.name} with ${winner.points} points!` : '';
+        state.players.forEach(p => p.points = 0);
+        logEntry('system', `🔄 Month reset.${winnerMsg}`);
+        await saveState();
+        render();
+        showToast('Month reset', 'success');
+      }
+    );
+  }
+
+  // ═══════════════════════════════════════════════
+  // MODALS
+  // ═══════════════════════════════════════════════
+  function openModal(id) { document.getElementById(id).classList.add('active'); }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    document.querySelectorAll(`#${id} .input`).forEach(i => i.value = '');
+    document.querySelectorAll(`#${id} .error-msg`).forEach(e => e.textContent = '');
+  }
+
+  let confirmCallback = null;
+  function showConfirm(title, msg, cb) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMsg').textContent = msg;
+    confirmCallback = cb;
+    closeModal('adminPanel');
+    openModal('confirmModal');
+  }
+
+  // ═══════════════════════════════════════════════
+  // TOAST
+  // ═══════════════════════════════════════════════
+  let toastTimer = null;
+  function showToast(msg, type = '') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + type;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ═══════════════════════════════════════════════
+  // EVENT WIRING
+  // ═══════════════════════════════════════════════
+  document.getElementById('adminBtn').addEventListener('click', () => {
+    if (state.isAdmin) {
+      openModal('adminPanel');
+    } else if (!state.pinHash) {
+      openModal('setPinModal');
+      setTimeout(() => document.getElementById('setPinInput').focus(), 100);
+    } else {
+      openModal('pinModal');
+      setTimeout(() => document.getElementById('pinInput').focus(), 100);
+    }
+  });
+
+  document.getElementById('setPinSubmit').addEventListener('click', async () => {
+    const pin = document.getElementById('setPinInput').value;
+    const confirm = document.getElementById('setPinConfirm').value;
+    const err = document.getElementById('setPinError');
+    if (!/^\d{4,6}$/.test(pin)) { err.textContent = 'PIN must be 4-6 digits'; return; }
+    if (pin !== confirm) { err.textContent = 'PINs don\'t match'; return; }
+    state.pinHash = await hashPin(pin);
+    state.isAdmin = true;
+    logEntry('system', '🔐 Admin PIN was set');
+    await saveState();
+    closeModal('setPinModal');
+    render();
+    showToast('Admin PIN set — you are logged in', 'success');
+  });
+
+  document.getElementById('pinSubmit').addEventListener('click', async () => {
+    const pin = document.getElementById('pinInput').value;
+    const err = document.getElementById('pinError');
+    const hash = await hashPin(pin);
+    if (hash === state.pinHash) {
+      state.isAdmin = true;
+      closeModal('pinModal');
+      render();
+      showToast('✓ Admin logged in', 'success');
+    } else {
+      err.textContent = 'Wrong PIN';
+    }
+  });
+
+  document.getElementById('pinInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') document.getElementById('pinSubmit').click();
+  });
+
+  document.getElementById('addPlayerBtn').addEventListener('click', () => {
+    closeModal('adminPanel');
+    openModal('playerModal');
+    setTimeout(() => document.getElementById('playerNameInput').focus(), 100);
+  });
+
+  document.getElementById('playerSubmit').addEventListener('click', async () => {
+    const name = document.getElementById('playerNameInput').value;
+    const ok = await addPlayer(name);
+    if (ok) closeModal('playerModal');
+  });
+
+  document.getElementById('playerNameInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') document.getElementById('playerSubmit').click();
+  });
+
+  document.getElementById('customPointsSubmit').addEventListener('click', async () => {
+    const val = parseInt(document.getElementById('customPointsInput').value, 10);
+    const reason = document.getElementById('customReasonInput').value.trim();
+    if (isNaN(val) || val === 0) {
+      showToast('Enter a non-zero number', 'error');
+      return;
+    }
+    await changePoints(customTargetId, val, reason);
+    closeModal('customPointsModal');
+  });
+
+  document.getElementById('customPointsInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') document.getElementById('customPointsSubmit').click();
+  });
+
+  document.getElementById('resetMonthBtn').addEventListener('click', confirmResetMonth);
+  document.getElementById('resetLink').addEventListener('click', confirmResetMonth);
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    state.isAdmin = false;
+    closeModal('adminPanel');
+    render();
+    showToast('Logged out', '');
+  });
+
+  document.getElementById('confirmSubmit').addEventListener('click', () => {
+    if (confirmCallback) confirmCallback();
+    closeModal('confirmModal');
+  });
+
+  document.getElementById('logHeader').addEventListener('click', () => {
+    const list = document.getElementById('logList');
+    const toggle = document.getElementById('logToggle');
+    list.classList.toggle('expanded');
+    toggle.textContent = list.classList.contains('expanded') ? '▲ Hide' : '▼ Show';
+  });
+
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay && overlay.id !== 'setPinModal') {
+        overlay.classList.remove('active');
+      }
+    });
+  });
+
+  // ═══════════════════════════════════════════════
+  // BOOT
+  // ═══════════════════════════════════════════════
+  (async () => {
+    await loadState();
+    render();
+    setInterval(async () => {
+      const wasAdmin = state.isAdmin;
+      await loadState();
+      state.isAdmin = wasAdmin;
+      render();
+    }, 30000);
+  })();
+</script>
+</body>
+</html>
